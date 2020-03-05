@@ -45,7 +45,7 @@ namespace books_api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(Book book)
+        public IActionResult Add([FromBody]Book book)
         {
             try
             {

@@ -17,11 +17,21 @@ namespace books_api
             Configuration = configuration;
         }
 
+        private const string CorsPolicyName = "MyCorsPolicy";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(
+                options => options.AddPolicy(
+                        CorsPolicyName,
+                        builder => builder
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod())
+            );
             services.AddDbContext<BooksContext>(opt => opt.UseInMemoryDatabase("BooksDb"));
             services.AddTransient<IBookService,BookService>();
             services.AddControllers();
@@ -38,6 +48,8 @@ namespace books_api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(CorsPolicyName);
 
             app.UseAuthorization();
 
